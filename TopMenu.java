@@ -1,9 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.concurrent.Flow;
 import java.util.function.Function;
-import java.util.stream.Stream;
+
+//import java.util.concurrent.Flow;
 
 
 public class TopMenu extends JPanel {
@@ -46,10 +46,16 @@ public class TopMenu extends JPanel {
         add(politicalIssueButton);
 
 
+        electionsButton.addActionListener(actionListenerFor(StateFactory::elections));
+        majorEventsButton.addActionListener(actionListenerFor(StateFactory::majorEvents));
+        //countries
+        //cities
+        //provinces
+        electoralDistrictsButton.addActionListener(actionListenerFor(StateFactory::electoralDistricts));
         partiesButton.addActionListener(actionListenerFor(StateFactory::politicalParties));
         politicalIssueButton.addActionListener(actionListenerFor(StateFactory::issues));
-
-
+        candidatesButton.addActionListener(actionListenerFor(StateFactory::candidates));
+        donationsButton.addActionListener(actionListenerFor(StateFactory::donations));
     }
 
     private ActionListener actionListenerFor(Function<Program,DisplayTableSelction> f){

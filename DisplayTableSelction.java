@@ -2,11 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -71,7 +69,7 @@ public class DisplayTableSelction {
                 + joinStatement
                 + whereFilters.stream()
                 .map(FilterOption::getQueryString)
-                .filter(s -> !s.isBlank())
+                .filter(s -> !(s.length() == 0))
                 .map(s -> " and " + s)
                 .collect(Collectors.joining());
         //                //+ "group by";
@@ -175,7 +173,7 @@ public class DisplayTableSelction {
 
     private Optional<Double> parseIntDouble(String s) {
         try {
-            if (s.isBlank()) {
+            if ((s.length() == 0)) {
                 return Optional.empty();
             } else {
                 return Optional.of(Double.parseDouble(s));

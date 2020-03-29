@@ -52,5 +52,23 @@ public class StateFactory {
         ).addFilterOptionLike("v.name")
                 .addIntFilterOption("v.age").addFilterOptionLike("pp.party_name").addFilterOptionLike("ae.place").addDateFilterOption("ae.date");
     }
-
+    public static DisplayTableSelction majorEvents(Program mainProgram) {
+        return new DisplayTableSelction(mainProgram,
+                "major_campaign_event ce, electoral_district ed",
+                "ce.election_id = ed.election_id",
+                Stream.of("ce.location", "ce.time", "ce.party_name")).addFilterOptionLike("ce.location").addDateFilterOption("ce.time");
+    }
+    public static DisplayTableSelction donations(Program mainProgram) {
+        return new DisplayTableSelction(mainProgram,
+                "party_donation_transaction d, transaction_by_voter tv, voter v",
+                "d.trasaction_id = tv.transaction_id and v.voter_id = tv.voter_id",
+                Stream.of("d.amount", "d.party_name", "v.name", "v.age"))
+                .addIntFilterOption("d.amount")
+                .addFilterOptionLike("d.party_name")
+                .addFilterOptionLike("v.name")
+                .addFilterOptionLike("v.age");
+    }
+    // countries
+    // cities
+    // provinces
 }
