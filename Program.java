@@ -23,7 +23,7 @@ public class Program {
     }
 
 
-    public void setTable(JTable table){
+    public void setTable(JTable table) {
         if(dataTable!=null){
             window.remove(dataTable);
         }

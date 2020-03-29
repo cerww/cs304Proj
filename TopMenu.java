@@ -48,9 +48,9 @@ public class TopMenu extends JPanel {
 
         electionsButton.addActionListener(actionListenerFor(StateFactory::elections));
         majorEventsButton.addActionListener(actionListenerFor(StateFactory::majorEvents));
-        //countries
-        //cities
-        //provinces
+        countriesButton.addActionListener(actionListenerFor(StateFactory::countries));
+        citiesButton.addActionListener(actionListenerFor(StateFactory::cities));
+        provincesButton.addActionListener(actionListenerFor(StateFactory::provinces));
         electoralDistrictsButton.addActionListener(actionListenerFor(StateFactory::electoralDistricts));
         partiesButton.addActionListener(actionListenerFor(StateFactory::politicalParties));
         politicalIssueButton.addActionListener(actionListenerFor(StateFactory::issues));
