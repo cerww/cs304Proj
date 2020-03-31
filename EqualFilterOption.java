@@ -5,6 +5,6 @@ public class EqualFilterOption implements FilterOption {
 
     @Override
     public String getQueryString() {
-        return value == null || (value.length() == 0) ? "" : optionName + "=" + "\"" + value  + "\"";
+        return value == null || (value.isBlank()) ? "" : optionName + "=" + "\"" + value  + "\"";
     }
 }

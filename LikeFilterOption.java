@@ -5,6 +5,6 @@ public class LikeFilterOption implements FilterOption {
 
     @Override
     public String getQueryString() {
-        return !(value.length() == 0) ? optionName + " like " + "'" + value + "'" : "";
+        return !(value.isBlank()) ? optionName + " like " + "'" + value + "'" : "";
     }
 }

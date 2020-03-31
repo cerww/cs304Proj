@@ -13,6 +13,7 @@ public class DisplayTableSelction {
 
     String tableName;
     String joinStatement;
+    List<String> attributesToDisplay;
     List<String> attributes;
     String orderByAttribute;
 
@@ -43,6 +44,8 @@ public class DisplayTableSelction {
 
 
         this.attributes = attributesToDisplay.collect(Collectors.toList());
+        this.attributesToDisplay = this.attributes.stream().map(DisplayTableSelction::getName).collect(Collectors.toList());
+
 
         initOrderByStuff();
     }
@@ -63,7 +66,7 @@ public class DisplayTableSelction {
     JTable getTable() {
         //TODO: getTable will execute an sql statement to get data, then returns a table with the stuff
         //stuff in whereFilters will be part of the statement
-        String statement = "Select * from "
+        String statement = "Select " + joinedAttributes() + " from "
                 + tableName
                 + " where "
                 + joinStatement
@@ -74,7 +77,7 @@ public class DisplayTableSelction {
                 .collect(Collectors.joining());
         //                //+ "group by";
         if(!orderByAttribute.equals("None")){
-            statement+=" order by " +orderByAttribute;
+            statement+=" order by " + orderByAttribute;
         }
 
         System.out.println(statement);
@@ -139,7 +142,7 @@ public class DisplayTableSelction {
     }
 
     DisplayTableSelction addDateFilterOption(String optionName){
-
+        //TODO
         return this;
     }
 
@@ -171,7 +174,7 @@ public class DisplayTableSelction {
         }
     }
 
-    private Optional<Double> parseIntDouble(String s) {
+    static private Optional<Double> parseIntDouble(String s) {
         try {
             if ((s.length() == 0)) {
                 return Optional.empty();
@@ -183,5 +186,8 @@ public class DisplayTableSelction {
         }
     }
 
+    private String joinedAttributes(){
+        return String.join(", ", attributes);
+    }
 
 }
