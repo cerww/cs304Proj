@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.sql.*;
 
 
 public class Program {
@@ -7,6 +8,7 @@ public class Program {
     private TopMenu topMenu;
     private JPanel sideMenu;
     private JTable dataTable;
+    public Connection dbConnection;
 
     public Program() {
         window = new JFrame();
@@ -14,7 +16,20 @@ public class Program {
         topMenu = new TopMenu(this);
         window.add(topMenu,BorderLayout.NORTH);
         setTable(new JTable());
+        try {
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+            dbConnection = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/304proj",
+                    "root",
+                    ""
+            );
+        } catch (SQLException e) {
+            System.out.println(";-;");
+            System.out.println(e.getSQLState());
+        }
         window.setVisible(true);
+
+
     }
 
 

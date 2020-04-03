@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +16,7 @@ public class DisplayTableSelction {
 
     String tableName;
     String joinStatement;
+    String groupByStm;
     List<String> attributesToDisplay;
     List<String> attributes;
     String orderByAttribute;
@@ -50,6 +54,11 @@ public class DisplayTableSelction {
         initOrderByStuff();
     }
 
+    public DisplayTableSelction(Program p, String tableName, String joinStatment, Stream<String> attributesToDisplay,String groupByStm) {
+        this(p,tableName,joinStatment,attributesToDisplay);
+        this.groupByStm = groupByStm;
+    }
+
     private void initOrderByStuff() {
         JLabel orderByText = new JLabel();
         orderByText.setText("sort by:");
@@ -81,6 +90,16 @@ public class DisplayTableSelction {
         }
 
         System.out.println(statement);
+
+        try (Statement stm = mainProgram.dbConnection.createStatement()){
+            ResultSet resultSet = stm.executeQuery(statement);;
+            resultSet.getFetchSize();
+            System.out.println(resultSet.getFetchSize());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return new JTable();
     }
 
@@ -184,6 +203,14 @@ public class DisplayTableSelction {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    static private String addQuotes(String s){
+        return "\"" + s + "\"";
+    }
+
+    static private String addWeirdQuotes(String s){
+        return "`" + s + "`";
     }
 
     private String joinedAttributes(){

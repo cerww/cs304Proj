@@ -8,7 +8,7 @@ public class StateFactory {
     public static DisplayTableSelction elections(Program mainProgram) {
         return
                 new DisplayTableSelction(mainProgram, "all_elections", "1=1",
-                        Stream.of("time", "place"))
+                        Stream.of("time", "place","election_name"))
                 .addFilterOptionLike("place");
     }
 
