@@ -1,61 +1,45 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Comparator;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 //import java.util.concurrent.Flow;
 
 
 public class TopMenu extends JPanel {
     private Program mainProgram;
-    JButton electionsButton;
-    JButton countriesButton;
-    JButton citiesButton;
-    JButton provincesButton;
-    JButton electoralDistrictsButton;
-    JButton candidatesButton;
-    JButton donationsButton;
-    JButton partiesButton;
-    JButton majorEventsButton;
-    JButton politicalIssueButton;
 
 
     public TopMenu(Program pm) {
         setLayout(new FlowLayout());
         mainProgram = pm;
-        electionsButton = new JButton("elections");
-        countriesButton = new JButton("countries");
-        citiesButton = new JButton("cities");
-        provincesButton = new JButton("provinces");
-        electoralDistrictsButton = new JButton("electoral districts");
-        candidatesButton = new JButton("candidates");
-        donationsButton = new JButton("donations");
-        partiesButton = new JButton("parties");
-        majorEventsButton = new JButton("events");
-        politicalIssueButton = new JButton("issues/policies");
 
-        add(electionsButton);
-        add(majorEventsButton);
-        add(countriesButton);
-        add(citiesButton);
-        add(provincesButton);
-        add(electoralDistrictsButton);
-        add(candidatesButton);
-        add(partiesButton);
-        add(donationsButton);
-        add(politicalIssueButton);
+        System.out.println(StateFactory.class.getMethods().length);
+        Stream.of(StateFactory.class.getMethods())
+                .filter(m->Modifier.isStatic(m.getModifiers()))
+                .filter(m->m.isAnnotationPresent(ButtonOption.class))
+                .sorted(Comparator.comparing(Method::getName))//TODO make this better, this comparison is effectivly random
+                .forEach(method->{
+                    var annotation = method.getAnnotation(ButtonOption.class);
+                    JButton button = new JButton(annotation.buttonText());
+                    button.addActionListener(actionListenerFor((a)-> {
+                        try {
+                            return (DisplayTableSelction) method.invoke(null,a);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            e.printStackTrace();
+                            throw new RuntimeException(e);
+                        }
+                    }));
+                    add(button);
+                });
 
 
-        electionsButton.addActionListener(actionListenerFor(StateFactory::elections));
-        majorEventsButton.addActionListener(actionListenerFor(StateFactory::majorEvents));
-        countriesButton.addActionListener(actionListenerFor(StateFactory::countries));
-        citiesButton.addActionListener(actionListenerFor(StateFactory::cities));
-        provincesButton.addActionListener(actionListenerFor(StateFactory::provinces));
-        electoralDistrictsButton.addActionListener(actionListenerFor(StateFactory::electoralDistricts));
-        partiesButton.addActionListener(actionListenerFor(StateFactory::politicalParties));
-        politicalIssueButton.addActionListener(actionListenerFor(StateFactory::issues));
-        candidatesButton.addActionListener(actionListenerFor(StateFactory::candidates));
-        donationsButton.addActionListener(actionListenerFor(StateFactory::donations));
+
     }
 
     private ActionListener actionListenerFor(Function<Program,DisplayTableSelction> f){

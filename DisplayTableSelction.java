@@ -19,7 +19,7 @@ public class DisplayTableSelction {
 
     String tableName;
     String joinStatement;
-    String groupByStm;
+    String groupByStm = "";
     List<String> attributesToDisplay;
     List<String> attributes;
     String orderByAttribute;
@@ -74,10 +74,7 @@ public class DisplayTableSelction {
         orderByAttribute = "None";
     }
 
-
-    JTable getTable() {
-        //TODO: getTable will execute an sql statement to get data, then returns a table with the stuff
-        //stuff in whereFilters will be part of the statement
+    public String getStatment(){
         String statement = "Select " + joinedAttributes() + " from "
                 + tableName
                 + " where "
@@ -88,11 +85,23 @@ public class DisplayTableSelction {
                 .map(s -> " and " + s)
                 .collect(Collectors.joining());
         //                //+ "group by";
+        if(!groupByStm.isBlank()){
+            statement += "group by " + groupByStm;
+        }
         if(!orderByAttribute.equals("None")){
             statement+=" order by " + orderByAttribute;
         }
 
+
         System.out.println(statement);
+        return statement;
+    }
+
+
+    JTable getTable() {
+        //TODO: getTable will execute an sql statement to get data, then returns a table with the stuff
+        //stuff in whereFilters will be part of the statement
+        String statement = getStatment();
 
         try (Statement stm = mainProgram.dbConnection.createStatement();
             ResultSet resultSet = stm.executeQuery(statement)){

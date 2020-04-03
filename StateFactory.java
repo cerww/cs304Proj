@@ -5,6 +5,7 @@ public class StateFactory {
 
     }
 
+    @ButtonOption(buttonText = "elections")
     public static DisplayTableSelction elections(Program mainProgram) {
         return
                 new DisplayTableSelction(mainProgram,
@@ -15,21 +16,23 @@ public class StateFactory {
                 .addFilterOptionLike("place");
     }
 
+    @ButtonOption(buttonText = "parties")
     public static DisplayTableSelction politicalParties(Program mainProgram) {
         return new DisplayTableSelction(mainProgram,
                 "political_party pp, political_party_years_active ppya",
-                "pp.party_name = ppya.party_name,pp.party_name <> \"independent\" ",
-                Stream.of("party_name", "date_established", "years_active")
-        ).addFilterOptionLike("ppya.party_name")
+                "pp.party_name = ppya.party_name and pp.party_name <> \"Independent\" ",
+                Stream.of("pp.party_name", "date_established", "years_active")
+        ).addFilterOptionLike("pp.party_name")
                 .addIntFilterOption("years_active")
                 .addDateFilterOption("date_established");
     }
 
+    @ButtonOption(buttonText = "issues/policies")
     public static DisplayTableSelction issues(Program mainProgram) {
         return new DisplayTableSelction(mainProgram,
-                "political_issue pi,candidate_positions cp,candidate c,voters v, all_elections e",
-                "pi.issue_name = cp.issue_name and c.voter_id = v.voter_id and cp.candidate_id = c.voter_id, cp.election_id = e.election_id",
-                Stream.of("pi.issue_name", "cp.position", "v.name", "v.age candidate_age", "e.date date_of_election", "e.place")
+                "political_issue pi,candidate_positions cp,candidate c,voter v, all_elections e, election ee",
+                "pi.issue_name = cp.issue_name and c.voter_id = v.voter_id and cp.candidate_id = c.voter_id and cp.election_id = e.election_id and ee.election_id = e.election_id",
+                Stream.of("pi.issue_name", "cp.position", "v.name", "v.age candidate_age", "ee.time date_of_election", "e.place")
                 )
                 .addIntFilterOption("candidate_age")
                 .addFilterOptionLike("pi.issue_name")
@@ -38,11 +41,12 @@ public class StateFactory {
                 .addDateFilterOption("date_of_election");
     }
 
+    @ButtonOption(buttonText = "electoralDistricts")
     public static DisplayTableSelction electoralDistricts(Program mainProgram){
         return new DisplayTableSelction(mainProgram,
-                "electoral_district ed, all_elections e,candidate_elected_in cei,candidate c,voter v",
-                "ed.election_id = e.election_id and cei.election_id = e.election_id and c.voter_id = cei.candidate_id and v.voter_id = c.voter_id",
-                Stream.of("ed.district_name","e.place election_place","e.date election_date","v.name winner_name","v.age winner_age")
+                "electoral_district ed, all_elections e,candidates_elected_in cei,candidate c,voter v,election ee",
+                "ed.election_id = e.election_id and cei.district_name = ed.district_name and cei.election_id = e.election_id and c.voter_id = cei.candidate_id and v.voter_id = c.voter_id and ee.election_id = e.election_id",
+                Stream.of("ed.district_name","e.place election_place","ee.time election_date","v.name winner_name","v.age winner_age")
                 )
                 .addFilterOptionLike("ed.district_name")
                 .addFilterOptionLike("election_place")
@@ -53,19 +57,21 @@ public class StateFactory {
 
     }
 
+    @ButtonOption(buttonText = "candidates")
     public static DisplayTableSelction candidates(Program mainProgram){
         return new DisplayTableSelction(mainProgram,
-                "political_party pp, candidate c,voter v,party_member pm,all_elections ae,candidate_ran_in cri",
-                "pp.party_name = pm.party_name and c.voter_id = v.voter_id and c.voter_id = pm.member_id and cri.candidate_id = c.voter_id and cri.election_id = ae.election_id",
-                /*attributes*/ Stream.of("v.name","v.age","pp.party_name", "ae.place candidate_in", "ae.date election_date")
+                "political_party pp, candidate c,voter v,party_member pm,all_elections ae,candidate_ran_in cri,election e",
+                "pp.party_name = pm.party_name and c.voter_id = v.voter_id and c.voter_id = pm.member_id and cri.candidate_id = c.voter_id and cri.election_id = ae.election_id and ae.election_id = e.election_id",
+                /*attributes*/ Stream.of("v.name","v.age","pp.party_name", "ae.place candidate_in", "e.time election_date")
                 )
                 .addFilterOptionLike("v.name")
                 .addIntFilterOption("v.age")
                 .addFilterOptionLike("pp.party_name")
                 .addFilterOptionLike("ae.place")
-                .addDateFilterOption("ae.date");
+                .addDateFilterOption("election_date");
     }
 
+    @ButtonOption(buttonText = "majorEvents")
     public static DisplayTableSelction majorEvents(Program mainProgram) {
         return new DisplayTableSelction(mainProgram,
                 "major_campaign_event ce, electoral_district ed",
@@ -76,6 +82,7 @@ public class StateFactory {
                 .addFilterOptionLike("ce.party_name");
     }
 
+    @ButtonOption(buttonText = "donations")
     public static DisplayTableSelction donations(Program mainProgram) {
         return new DisplayTableSelction(mainProgram,
                 "party_donation_transaction d, transaction_by_voter tv, voter v",
@@ -84,9 +91,10 @@ public class StateFactory {
                 .addIntFilterOption("d.amount")
                 .addFilterOptionLike("d.party_name")
                 .addFilterOptionLike("v.name")
-                .addFilterOptionLike("v.age");
+                .addIntFilterOption("v.age");
     }
 
+    @ButtonOption(buttonText = "countries")
     public static DisplayTableSelction countries(Program mainProgram) {
         return new DisplayTableSelction(mainProgram,
                 "federal_election fe, electoral_district ed, candidates_elected_in cei, candidate c, voter v",
@@ -97,7 +105,7 @@ public class StateFactory {
                 .addFilterOptionLike("ce.party_name")
                 .addFilterOptionLike("v.name");
     }
-
+    @ButtonOption(buttonText = "provinces")
     public static DisplayTableSelction cities(Program mainProgram) {
         return new DisplayTableSelction(mainProgram,
                 "municipal_election me, electoral_district ed, candidates_elected_in cei, candidate c, voter v",
@@ -109,6 +117,7 @@ public class StateFactory {
                 .addFilterOptionLike("v.name");
     }
 
+    @ButtonOption(buttonText = "provinces")
     public static DisplayTableSelction provinces(Program mainProgram) {
         return new DisplayTableSelction(mainProgram,
                 "provincial_election pe, electoral_district ed, candidates_elected_in cei, candidate c, voter v",
@@ -119,4 +128,15 @@ public class StateFactory {
                 .addFilterOptionLike("ce.party_name winning_party")
                 .addFilterOptionLike("v.name winner_name");
     }
+
+    @ButtonOption(buttonText = "seat winnings")
+    public static DisplayTableSelction number_of_seats_won(Program mainProgram){
+        return new DisplayTableSelction(mainProgram,
+                "electoral_district ed,candidates_elected_in cei,political_party pp,party_member pm",
+                "ed.election_id = cei.election_id and cei.candidate_id = pm.candidate_id and pm.party_name = pp.party_name",
+                Stream.of("pp.party_name","count(*) seats_won"),
+                "ed.election_id, pp.party_name");
+    }
+
+
 }

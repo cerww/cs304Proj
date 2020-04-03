@@ -12,7 +12,7 @@ public class Program {
 
     public Program() {
         window = new JFrame();
-        window.setSize(new Dimension(1200,800));
+        window.setSize(new Dimension(1400,800));
         topMenu = new TopMenu(this);
         window.add(topMenu,BorderLayout.NORTH);
         setTable(new JTable());
