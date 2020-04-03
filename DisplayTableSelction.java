@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
@@ -7,7 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Vector;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -91,19 +94,30 @@ public class DisplayTableSelction {
 
         System.out.println(statement);
 
-        try (Statement stm = mainProgram.dbConnection.createStatement()){
-            ResultSet resultSet = stm.executeQuery(statement);;
-            resultSet.getFetchSize();
-            System.out.println(resultSet.getFetchSize());
+        try (Statement stm = mainProgram.dbConnection.createStatement();
+            ResultSet resultSet = stm.executeQuery(statement)){
+            JTable returnTable = new JTable();
 
+            Vector<Vector<String>> tableData = new Vector<>();
+
+            while(resultSet.next()) {
+                Vector<String> rowData = new Vector<>();
+                //cant use stream cuz of checked exceptions
+                for(var attribute:attributesToDisplay){
+                    rowData.add(resultSet.getString(attribute));
+                }
+                tableData.add(rowData);
+
+            }
+
+
+            return new JTable(tableData,new Vector<>(attributesToDisplay));
         } catch (SQLException e) {
+            //System.out.println(e.getSQLState());
             e.printStackTrace();
+            return new JTable();
         }
-
-        return new JTable();
     }
-
-    ;
 
     DisplayTableSelction addFilterOptionEqual(String optionName) {
         EqualFilterOption fo = new EqualFilterOption();
