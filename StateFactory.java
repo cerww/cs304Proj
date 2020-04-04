@@ -75,8 +75,8 @@ public class StateFactory {
     public static DisplayTableSelction majorEvents(Program mainProgram) {
         return new DisplayTableSelction(mainProgram,
                 "major_campaign_event ce, electoral_district ed",
-                "ce.election_id = ed.election_id",
-                Stream.of("ce.location", "ce.time", "ce.party_name"))
+                "ce.election_id = ed.election_id and ce.district_name = ed.district_name",
+                Stream.of("ce.location", "ce.time", "ce.party_name","ed.district_name"))
                 .addFilterOptionLike("ce.location")
                 .addDateFilterOption("ce.time")
                 .addFilterOptionLike("ce.party_name");
@@ -94,6 +94,21 @@ public class StateFactory {
                 .addIntFilterOption("v.age");
     }
 
+    @ButtonOption(buttonText = "total donations")
+    public static DisplayTableSelction total_donations_per_person(Program mainProgram){
+        return new DisplayTableSelction(mainProgram,
+                "transaction_by_voter tv,voter v,party_donation_transaction d",
+                "tv.voter_id = v.voter_id and tv.transaction_id = d.transaction_id",
+                Stream.of("v.name name","v.age age","sum(d.amount) total","d.party_name party_name"),
+                "v.voter_id,v.name,d.party_name,v.age")
+                .addIntFilterOption("total")
+                .addFilterOptionLike("party_name")
+                .addFilterOptionLike("v.name")
+                .addIntFilterOption("v.age");
+
+    }
+
+    /*
     @ButtonOption(buttonText = "countries")
     public static DisplayTableSelction countries(Program mainProgram) {
         return new DisplayTableSelction(mainProgram,
@@ -108,9 +123,9 @@ public class StateFactory {
     @ButtonOption(buttonText = "cities")
     public static DisplayTableSelction cities(Program mainProgram) {
         return new DisplayTableSelction(mainProgram,
-                "municipal_election me, electoral_district ed, candidates_elected_in cei, candidate c, voter v",
-                "me.election_id = ed.election_id and cei.election_id = ed.election_id and cei.candidate_id = c.voter_id and c.voter_id = v.voter_id",
-                Stream.of("me.city_name", "ed.number_of_votes", "ce.party_name", "v.name"))
+                "municipal_election me,all_elections ae,election ee",
+                "me.election_id = ae.election_id and ae.election_id = ee.e.election_id",
+                Stream.of("me.city_name","","","ee.time election_date"))
                 .addFilterOptionLike("me.city_name")
                 .addIntFilterOption("ed.number_of_votes")
                 .addFilterOptionLike("ce.party_name")
@@ -128,15 +143,35 @@ public class StateFactory {
                 .addFilterOptionLike("ce.party_name winning_party")
                 .addFilterOptionLike("v.name winner_name");
     }
-
+    */
     @ButtonOption(buttonText = "seat winnings")
     public static DisplayTableSelction number_of_seats_won(Program mainProgram){
         return new DisplayTableSelction(mainProgram,
-                "electoral_district ed,candidates_elected_in cei,political_party pp,party_member pm",
-                "ed.election_id = cei.election_id and cei.candidate_id = pm.member_id and pm.party_name = pp.party_name and cei.district_name = ed.district_name",
-                Stream.of("pp.party_name","count(*) seats_won"),
-                "ed.election_id, pp.party_name");
+                "electoral_district ed,candidates_elected_in cei,political_party pp,party_member pm,all_elections ae,election ee",
+                "ee.election_id = ae.election_id and ae.election_id = ed.election_id and ed.election_id = cei.election_id and cei.candidate_id = pm.member_id and pm.party_name = pp.party_name and cei.district_name = ed.district_name",
+                Stream.of("pp.party_name","count(*) seats_won","ae.place","ee.time election_date"),
+                "ed.election_id, pp.party_name,ae.place,ee.time");
     }
 
+    @ButtonOption(buttonText = "crazy donaters")
+    public static DisplayTableSelction ppl_who_donated_to_everyone(Program mainProgram){
+        class TableSelection extends DisplayTableSelction{
+            TableSelection(Program mainProgram){
+                super(mainProgram,
+                        "",
+                        "*",
+                        Stream.of());
+            }
+
+            @Override
+            public String getStatment(){
+                return "Select name from voter v where not exists((Select party_name from political_party)" +
+                        "except (select party_name from party_donation_transaction d,transaction_by_voter tv " +
+                        "where d.transaction_id = tv.transaction_id and tv.voter_id = v.voter_id))";
+            }
+
+        }
+        return new TableSelection(mainProgram);
+    }
 
 }

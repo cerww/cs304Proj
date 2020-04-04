@@ -7,7 +7,7 @@ public class Program {
     private JFrame window;
     private TopMenu topMenu;
     private JPanel sideMenu;
-    private JTable dataTable;
+    private JPanel dataTable;
     public Connection dbConnection;
 
     public Program() {
@@ -27,6 +27,7 @@ public class Program {
             System.out.println(";-;");
             System.out.println(e.getSQLState());
         }
+        changeState(StateFactory.elections(this));
         window.setVisible(true);
 
 
@@ -42,8 +43,11 @@ public class Program {
         if(dataTable!=null){
             window.remove(dataTable);
         }
-        table.setPreferredSize(new Dimension(500,500));
-        dataTable = table;
+        dataTable = new JPanel();
+        //table.setPreferredSize(new Dimension(1050,600));
+        JScrollPane pane = new JScrollPane(table);
+
+        dataTable.add(pane);
         window.add(dataTable,BorderLayout.CENTER);
         window.revalidate();
         window.repaint();

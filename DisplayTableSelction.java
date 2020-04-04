@@ -78,22 +78,29 @@ public class DisplayTableSelction {
         String statement = "Select " + joinedAttributes() + " from "
                 + tableName
                 + " where "
-                + joinStatement
-                + whereFilters.stream()
+                + joinStatement;
+
+        //                //+ "group by";
+        String filterStuff =  whereFilters.stream()
                 .map(FilterOption::getQueryString)
                 .filter(s -> !(s.length() == 0))
                 .map(s -> " and " + s)
                 .collect(Collectors.joining());
-        //                //+ "group by";
         if(!groupByStm.isBlank()){
             statement += " group by " + groupByStm;
+            if(!filterStuff.isBlank()){
+                statement +=" having " + filterStuff;
+            }
+        }else{
+            statement+=filterStuff;
         }
+
         if(!orderByAttribute.equals("None")){
             statement+=" order by " + orderByAttribute;
         }
 
 
-        System.out.println(statement);
+
         return statement;
     }
 
@@ -102,6 +109,7 @@ public class DisplayTableSelction {
         //TODO: getTable will execute an sql statement to get data, then returns a table with the stuff
         //stuff in whereFilters will be part of the statement
         String statement = getStatment();
+        System.out.println(statement);
 
         try (Statement stm = mainProgram.dbConnection.createStatement();
             ResultSet resultSet = stm.executeQuery(statement)){
