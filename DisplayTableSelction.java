@@ -86,7 +86,7 @@ public class DisplayTableSelction {
                 .collect(Collectors.joining());
         //                //+ "group by";
         if(!groupByStm.isBlank()){
-            statement += "group by " + groupByStm;
+            statement += " group by " + groupByStm;
         }
         if(!orderByAttribute.equals("None")){
             statement+=" order by " + orderByAttribute;

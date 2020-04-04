@@ -67,7 +67,7 @@ public class StateFactory {
                 .addFilterOptionLike("v.name")
                 .addIntFilterOption("v.age")
                 .addFilterOptionLike("pp.party_name")
-                .addFilterOptionLike("ae.place")
+                .addFilterOptionLike("candidate_in")
                 .addDateFilterOption("election_date");
     }
 
@@ -105,7 +105,7 @@ public class StateFactory {
                 .addFilterOptionLike("ce.party_name")
                 .addFilterOptionLike("v.name");
     }
-    @ButtonOption(buttonText = "provinces")
+    @ButtonOption(buttonText = "cities")
     public static DisplayTableSelction cities(Program mainProgram) {
         return new DisplayTableSelction(mainProgram,
                 "municipal_election me, electoral_district ed, candidates_elected_in cei, candidate c, voter v",
@@ -133,7 +133,7 @@ public class StateFactory {
     public static DisplayTableSelction number_of_seats_won(Program mainProgram){
         return new DisplayTableSelction(mainProgram,
                 "electoral_district ed,candidates_elected_in cei,political_party pp,party_member pm",
-                "ed.election_id = cei.election_id and cei.candidate_id = pm.candidate_id and pm.party_name = pp.party_name",
+                "ed.election_id = cei.election_id and cei.candidate_id = pm.member_id and pm.party_name = pp.party_name and cei.district_name = ed.district_name",
                 Stream.of("pp.party_name","count(*) seats_won"),
                 "ed.election_id, pp.party_name");
     }

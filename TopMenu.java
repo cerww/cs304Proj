@@ -23,7 +23,7 @@ public class TopMenu extends JPanel {
         Stream.of(StateFactory.class.getMethods())
                 .filter(m->Modifier.isStatic(m.getModifiers()))
                 .filter(m->m.isAnnotationPresent(ButtonOption.class))
-                .sorted(Comparator.comparing(Method::getName))//TODO make this better, this comparison is effectivly random
+                .sorted(Comparator.comparing(Method::getName))
                 .forEach(method->{
                     var annotation = method.getAnnotation(ButtonOption.class);
                     JButton button = new JButton(annotation.buttonText());
@@ -37,9 +37,6 @@ public class TopMenu extends JPanel {
                     }));
                     add(button);
                 });
-
-
-
     }
 
     private ActionListener actionListenerFor(Function<Program,DisplayTableSelction> f){
