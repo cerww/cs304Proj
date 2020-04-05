@@ -29,7 +29,7 @@ public class TopMenu extends JPanel {
                     JButton button = new JButton(annotation.buttonText());
                     button.addActionListener(actionListenerFor((a)-> {
                         try {
-                            return (DisplayTableSelction) method.invoke(null,a);
+                            return (Thing) method.invoke(null,a);
                         } catch (IllegalAccessException | InvocationTargetException e) {
                             e.printStackTrace();
                             throw new RuntimeException(e);
@@ -39,7 +39,7 @@ public class TopMenu extends JPanel {
                 });
     }
 
-    private ActionListener actionListenerFor(Function<Program,DisplayTableSelction> f){
+    private ActionListener actionListenerFor(Function<Program,Thing> f){
         return (e)->mainProgram.changeState(f.apply(mainProgram));
     }
 

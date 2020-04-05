@@ -13,7 +13,8 @@ public class StateFactory {
                         "ae.election_id = e.election_id",
                         Stream.of("time", "place","election_name","type")
                 )
-                .addFilterOptionLike("place");
+                .addFilterOptionLike("place")
+                .addSelectionFilterOption("type","federal","provincial","municiple");
     }
 
     @ButtonOption(buttonText = "parties")
@@ -153,19 +154,19 @@ public class StateFactory {
                 "ed.election_id, pp.party_name,ae.place,ee.time");
     }
 
-    @ButtonOption(buttonText = "crazy donaters")
+    @ButtonOption(buttonText = "big donaters")
     public static DisplayTableSelction ppl_who_donated_to_everyone(Program mainProgram){
         class TableSelection extends DisplayTableSelction{
             TableSelection(Program mainProgram){
                 super(mainProgram,
                         "",
                         "*",
-                        Stream.of());
+                        Stream.of("name","age"));
             }
 
             @Override
             public String getStatment(){
-                return "Select name from voter v where not exists((Select party_name from political_party)" +
+                return "Select name, age from voter v where not exists((Select party_name from political_party)" +
                         "except (select party_name from party_donation_transaction d,transaction_by_voter tv " +
                         "where d.transaction_id = tv.transaction_id and tv.voter_id = v.voter_id))";
             }
@@ -174,4 +175,18 @@ public class StateFactory {
         return new TableSelection(mainProgram);
     }
 
+    @ButtonOption(buttonText = "modify voters")
+    public static Thing modify_voters_thing(Program mainProgram){
+        return new ModifyVoterThing(mainProgram);
+    }
+
+    @ButtonOption(buttonText = "voters")
+    public static DisplayTableSelction voters(Program mainProgram){
+        return new DisplayTableSelction(mainProgram,
+                "voter",
+                "1",
+                Stream.of("voter_id","address","name","age","postal_code")
+        ).addIntFilterOption("age").addFilterOptionLike("name");
+    }
 }
+

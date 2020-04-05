@@ -14,7 +14,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DisplayTableSelction {
+public class DisplayTableSelction extends Thing{
     Program mainProgram;
 
     String tableName;
@@ -26,7 +26,7 @@ public class DisplayTableSelction {
 
 
 
-    JPanel sidePanel;
+    //JPanel sidePanel;
     private JPanel filterOptionsPanel;
     private List<FilterOption> whereFilters = new ArrayList<>();
     private List<Consumer<Void>> thingsToFireBeforeFilters = new ArrayList<>();
@@ -89,7 +89,7 @@ public class DisplayTableSelction {
         if(!groupByStm.isBlank()){
             statement += " group by " + groupByStm;
             if(!filterStuff.isBlank()){
-                statement +=" having " + filterStuff;
+                statement +=" having 1" + filterStuff;
             }
         }else{
             statement+=filterStuff;
@@ -98,8 +98,6 @@ public class DisplayTableSelction {
         if(!orderByAttribute.equals("None")){
             statement+=" order by " + orderByAttribute;
         }
-
-
 
         return statement;
     }
@@ -191,6 +189,25 @@ public class DisplayTableSelction {
         return this;
     }
 
+    public DisplayTableSelction addSelectionFilterOption(String optionName, String... options){
+        addOptionLabelFor(optionName);
+        JComboBox<String> comboBox = new JComboBox<>();
+        comboBox.addItem("any");
+        Stream.of(options).forEach(comboBox::addItem);
+        EqualFilterOption efo = new EqualFilterOption();
+        efo.optionName = optionName;
+        thingsToFireBeforeFilters.add((a)->{
+            if(comboBox.getSelectedItem().equals("any")){
+                efo.value = "";
+            }else{
+                efo.value = (String)comboBox.getSelectedItem();
+            }
+        });
+        whereFilters.add(efo);
+        filterOptionsPanel.add(comboBox);
+        return this;
+    }
+
     DisplayTableSelction addDateFilterOption(String optionName){
         //TODO
         return this;
@@ -218,7 +235,7 @@ public class DisplayTableSelction {
     private static String getName(String s) {
         int idx = s.lastIndexOf(" ");
         if (idx == -1) {
-            return s;
+            return removeDot(s);
         } else {
             return s.substring(idx + 1);
         }

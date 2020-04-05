@@ -44,8 +44,9 @@ public class Program {
             window.remove(dataTable);
         }
         dataTable = new JPanel();
-        //table.setPreferredSize(new Dimension(1050,600));
+
         JScrollPane pane = new JScrollPane(table);
+        pane.setPreferredSize(new Dimension(1000,600));
 
         dataTable.add(pane);
         window.add(dataTable,BorderLayout.CENTER);
@@ -53,7 +54,7 @@ public class Program {
         window.repaint();
     }
 
-    public void changeState(DisplayTableSelction displayTableSelction){
+    public void changeState(Thing displayTableSelction){
         if(sideMenu!=null){
             window.remove(sideMenu);
         }
