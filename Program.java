@@ -49,7 +49,7 @@ public class Program {
         pane.setPreferredSize(new Dimension(1000,600));
 
         dataTable.add(pane);
-        window.add(dataTable,BorderLayout.CENTER);
+        window.add(dataTable,BorderLayout.CENTER);;
         window.revalidate();
         window.repaint();
     }
