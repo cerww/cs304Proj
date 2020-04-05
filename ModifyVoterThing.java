@@ -103,18 +103,22 @@ public class ModifyVoterThing extends Thing {
 
                 if(!addressField.getText().isBlank()){
                     var sql_statement = format.format(new Object[]{"address",addressField.getText(),voterIDField.getText()});
+                    System.out.println(sql_statement);
                     s.execute(sql_statement);
                 }
                 if(!nameField.getText().isBlank()){
                     var sql_statement = format.format(new Object[]{"name",nameField.getText(),voterIDField.getText()});
+                    System.out.println(sql_statement);
                     s.execute(sql_statement);
                 }
                 if(!ageField.getText().isBlank()){
                     var sql_statement = format.format(new Object[]{"age",ageField.getText(),voterIDField.getText()});
+                    System.out.println(sql_statement);
                     s.execute(sql_statement);
                 }
                 if(!postalCodeField.getText().isBlank()){
                     var sql_statement = format.format(new Object[]{"postal_code",postalCodeField.getText(),voterIDField.getText()});
+                    System.out.println(sql_statement);
                     s.execute(sql_statement);
                 }
 

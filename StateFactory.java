@@ -151,7 +151,7 @@ public class StateFactory {
                 "electoral_district ed,candidates_elected_in cei,political_party pp,party_member pm,all_elections ae,election ee",
                 "ee.election_id = ae.election_id and ae.election_id = ed.election_id and ed.election_id = cei.election_id and cei.candidate_id = pm.member_id and pm.party_name = pp.party_name and cei.district_name = ed.district_name",
                 Stream.of("pp.party_name","count(*) seats_won","ae.place","ee.time election_date"),
-                "ed.election_id, pp.party_name,ae.place,ee.time");
+                "ed.election_id, pp.party_name,ae.place,ee.time").addIntFilterOption("seats_won");
     }
 
     @ButtonOption(buttonText = "big donaters")
